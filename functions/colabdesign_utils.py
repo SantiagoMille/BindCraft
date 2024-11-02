@@ -22,6 +22,7 @@ def binder_hallucination(design_name, starting_pdb, chain, target_hotspot_residu
     model_pdb_path = os.path.join(design_paths["Trajectory"], design_name+".pdb")
 
     # clear GPU memory for new trajectory
+    print("Santi BindCraft")
     clear_mem()
 
     # initialise binder hallucination model
