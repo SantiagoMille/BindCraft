@@ -15,7 +15,6 @@ from .generic_utils import *
 
 # suppress warnings
 #os.environ["SLURM_STEP_NODELIST"] = os.environ["SLURM_NODELIST"]
-print("Santi BindCraft!")
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=DeprecationWarning)
 warnings.simplefilter(action='ignore', category=BiopythonWarning)
