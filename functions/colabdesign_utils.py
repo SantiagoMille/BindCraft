@@ -18,15 +18,15 @@ from .pyrosetta_utils import pr_relax, align_pdbs
 from .generic_utils import update_failures
 
 # hallucinate a binder
-def binder_hallucination(design_name, starting_pdb, chain, target_hotspot_residues, length, seed, helicity_value, design_models, advanced_settings, design_paths, failure_csv):
+def binder_hallucination(design_name, protocol='binder' starting_pdb, chain, target_hotspot_residues, length, seed, helicity_value, design_models, advanced_settings, design_paths, failure_csv, fixed_positions=None):
     model_pdb_path = os.path.join(design_paths["Trajectory"], design_name+".pdb")
 
     # clear GPU memory for new trajectory
-    print("Santi BindCraft")
+    print("Mod. BindCraft")
     clear_mem()
-
+    print("Design protocol:", protocol)
     # initialise binder hallucination model
-    af_model = mk_afdesign_model(protocol="binder", debug=False, data_dir=advanced_settings["af_params_dir"], 
+    af_model = mk_afdesign_model(protocol=protocol, debug=False, data_dir=advanced_settings["af_params_dir"], 
                                 use_multimer=advanced_settings["use_multimer_design"], num_recycles=advanced_settings["num_recycles_design"],
                                 best_metric='loss')
 
@@ -34,8 +34,13 @@ def binder_hallucination(design_name, starting_pdb, chain, target_hotspot_residu
     if target_hotspot_residues == "":
         target_hotspot_residues = None
 
-    af_model.prep_inputs(pdb_filename=starting_pdb, chain=chain, binder_len=length, hotspot=target_hotspot_residues, seed=seed, rm_aa=advanced_settings["omit_AAs"],
-                        rm_target_seq=advanced_settings["rm_template_seq_design"], rm_target_sc=advanced_settings["rm_template_sc_design"])
+    
+    print('Fixed positions:',fixed_positions)
+    af_model.prep_inputs(pdb_filename=starting_pdb, chain=chain, binder_len=length,
+                        fix_pos=fixed_positions,
+                        hotspot=target_hotspot_residues, seed=seed, rm_aa=advanced_settings["omit_AAs"],
+                        rm_target_seq=advanced_settings["rm_template_seq_design"], 
+                        rm_target_sc=advanced_settings["rm_template_sc_design"])
 
     ### Update weights based on specified settings
     af_model.opt["weights"].update({"pae":advanced_settings["weights_pae_intra"],
