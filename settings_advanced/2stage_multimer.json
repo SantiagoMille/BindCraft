@@ -2,7 +2,7 @@
     "omit_AAs": "C",
     "force_reject_AA": false,
     "use_multimer_design": true,
-    "design_algorithm": "4stage",
+    "design_algorithm": "greedy",
     "sample_models": true,
     "rm_template_seq_design": false,
     "rm_template_seq_predict": false,
